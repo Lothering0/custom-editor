@@ -66,8 +66,24 @@ export const setStyles = (element: HTMLElement): void => {
       white-space: pre-wrap;
     }
 
+    ${elementSelector} .number {
+      color: #a796f9;
+    }
+
+    ${elementSelector} .string {
+      color: #7db36e;
+    }
+
+    ${elementSelector} .builtin-constant {
+      color: #d99051;
+    }
+
     ${elementSelector} .keyword {
       color: #c73cdb;
+    }
+
+    ${elementSelector} .identifier {
+      color: #f0c954;
     }
   `;
 };
