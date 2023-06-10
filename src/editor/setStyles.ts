@@ -1,34 +1,73 @@
 export const setStyles = (element: HTMLElement): void => {
-  const customId = Date.now().toString().slice(-4);
+  const customId = Math.random().toString().slice(-4);
   element.classList.add(`editor-${customId}`);
-
-  element.style.padding = "10px 15px 10px 45px";
-  element.style.borderRadius = "8px";
-  element.style.backgroundColor = "#333";
-  element.style.color = "#bbb";
-  element.style.fontFamily = "monospace";
-  element.style.fontSize = "15px";
-  element.style.outline = "none";
 
   const styles = document.createElement("style");
   const elementSelector = `.editor-${customId}`;
+  const linesSelector = `${elementSelector} > ol`;
+  const singleLineSelector = `${linesSelector} > li`;
+
+  document.head.appendChild(styles);
   styles.innerHTML = `
-    ${elementSelector}::selection {
+    ${elementSelector} {
+      padding: 10px 15px 10px 45px;
+      border-radius: 8px;
+      background-color: #333;
+      color: #bbb;
+      outline: none;
+    }
+
+    ${elementSelector} *::selection {
       background-color: rgba(138, 138, 138, 0.5);
     }
 
-    ${elementSelector} > div {
-      position: relative;
+    ${linesSelector} {
+      counter-reset: line;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
     }
 
-    ${elementSelector} > div::before {
-      counter-increment: count;
-      content: counter(count);
-      left: -20px;
+    ${singleLineSelector} {
+      position: relative;
+      display: block;
+      height: 20px;
+    }
+
+    ${singleLineSelector}::before {
+      counter-increment: line;
+      content: counter(line);
       position: absolute;
+      left: -45px;
+      width: 30px;
       color: #676767;
+      text-align: right;
+    }
+
+    ${elementSelector},
+    ${singleLineSelector} > input {
+      font-family: monospace;
+      font-size: 15px;
+    }
+
+    ${singleLineSelector} > input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      background-color: transparent;
+      border: none;
+      color: transparent;
+      caret-color: white;
+      outline: none;
+    }
+
+    ${singleLineSelector} > span {
+      white-space: pre-wrap;
+    }
+
+    ${elementSelector} .keyword {
+      color: #c73cdb;
     }
   `;
-
-  document.head.appendChild(styles);
 };
