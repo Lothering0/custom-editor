@@ -13,6 +13,8 @@ export const KEYWORDS = [
   "case",
   "default",
   "with",
+  "return",
+  "throw",
 ];
 
 export const DECLARE_KEYWORDS = ["var", "let", "const", "function", "class"];

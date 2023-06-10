@@ -7,4 +7,4 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 
 const editorElement = document.getElementById("editor");
 
-if (editorElement) useEditor(editorElement);
+if (editorElement) useEditor(editorElement, "main");

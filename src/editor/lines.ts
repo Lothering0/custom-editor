@@ -1,7 +1,7 @@
 import { BUILTIN_CONSTANTS, KEYWORDS, DECLARE_KEYWORDS, OPERATORS } from "./keywords";
 
 const formatContent = (content: string): string => {
-  const delimeters = /([(){}\[\]; ])/.toString().replace(/\//g, "");
+  const delimeters = /([(){}\[\];, ])/.toString().replace(/\//g, "");
   const surroundByDelimeters = (token: string): RegExp => {
     return new RegExp(`(?:${delimeters}|^)(${token})(?:${delimeters}|$)`, "g");
   };
@@ -60,9 +60,61 @@ export const createLine = (): HTMLLIElement => {
   return line;
 };
 
-export const defineLines = (): HTMLOListElement => {
+interface SavedLine {
+  /** <input> value */
+  value: string;
+  /** <span> HTML content */
+  html: string;
+}
+
+interface SavedInfo {
+  lines: SavedLine[];
+}
+
+const getLineInput = (item: HTMLLIElement): HTMLInputElement => {
+  /** First children always <input> */
+  return <HTMLInputElement>item.children[0];
+};
+
+const getLineSpan = (item: HTMLLIElement): HTMLSpanElement => {
+  /** Second children always <span> */
+  return <HTMLSpanElement>item.children[1];
+};
+
+export const defineLines = (id?: string): HTMLOListElement => {
   const list = document.createElement("ol");
-  list.appendChild(createLine());
+
+  if (!id) {
+    list.appendChild(createLine());
+    return list;
+  }
+
+  const key = `custom-editor-${id}`;
+  const savedContent = localStorage.getItem(key);
+
+  if (savedContent) {
+    const { lines } = <SavedInfo>JSON.parse(savedContent);
+
+    lines.forEach(({ html, value }) => {
+      const line = createLine();
+      getLineSpan(line).innerHTML = html;
+      getLineInput(line).value = value;
+      list.appendChild(line);
+    });
+
+    if (!lines.length) list.appendChild(createLine());
+  } else list.appendChild(createLine());
+
+  setInterval(() => {
+    const savedInfo: SavedInfo = {
+      lines: [...list.children].map((li) => ({
+        value: getLineInput(<HTMLLIElement>li).value,
+        html: getLineSpan(<HTMLLIElement>li).innerHTML,
+      })),
+    };
+
+    localStorage.setItem(key, JSON.stringify(savedInfo));
+  }, 2 * 1000);
 
   return list;
 };
