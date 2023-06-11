@@ -1,7 +1,7 @@
 import { BUILTIN_CONSTANTS, KEYWORDS, DECLARE_KEYWORDS } from "./keywords";
 
 const formatContent = (content: string): string => {
-  const delimiters = /([(){}\[\];, ])/.toString().replace(/\//g, "");
+  const delimiters = /([(){}\[\];, \+\*/])/.toString().replace(/\//g, "");
   const surroundByDelimeters = (token: string): RegExp => {
     return new RegExp(`(?:${delimiters}|^)(${token})(?:${delimiters}|$)`, "g");
   };
@@ -35,7 +35,7 @@ const formatContent = (content: string): string => {
 
   // Replace numbers
   content = content.replace(
-    surroundByDelimeters("(?:\\d+n?)|(?:0(?:o|x|b)\\d+)"),
+    surroundByDelimeters("(?:\\d+n?)|(?:0(?:o|O|x|X|b|B)\\d+)"),
     `$1<span class="number">$2</span>$3`
   );
 
@@ -44,16 +44,14 @@ const formatContent = (content: string): string => {
 
 export const createLine = (): HTMLLIElement => {
   const line = document.createElement("li");
-  const lineInput = document.createElement("input");
   const contentHolder = document.createElement("span");
 
-  line.appendChild(lineInput);
   line.appendChild(contentHolder);
 
-  lineInput.addEventListener("input", (event) => {
+  /* lineInput.addEventListener("input", (event) => {
     const { value } = <HTMLInputElement>event.target;
     contentHolder.innerHTML = formatContent(value);
-  });
+  }); */
 
   return line;
 };
@@ -69,25 +67,44 @@ interface SavedInfo {
   lines: SavedLine[];
 }
 
-const getLineInput = (item: HTMLLIElement): HTMLInputElement => {
-  /** First children always <input> */
-  return <HTMLInputElement>item.children[0];
-};
+interface Lines {
+  element: HTMLOListElement;
+  setContent(content: string): void;
+}
 
 const getLineSpan = (item: HTMLLIElement): HTMLSpanElement => {
   /** Second children always <span> */
   return <HTMLSpanElement>item.children[1];
 };
 
-export const defineLines = (id?: string): HTMLOListElement => {
+export const defineLines = (id?: string): Lines => {
   const list = document.createElement("ol");
+
+  const setContent = (content: string): void => {
+    list.innerHTML = "";
+
+    content.split("\n").forEach((value) => {
+      const line = createLine();
+      line.innerHTML = formatContent(value);
+      list.appendChild(line);
+    });
+  };
 
   if (!id) {
     list.appendChild(createLine());
-    return list;
+    return {
+      element: list,
+      setContent,
+    };
   }
 
-  const key = `custom-editor-${id}`;
+  list.appendChild(createLine());
+  return {
+    element: list,
+    setContent,
+  };
+
+  /* const key = `custom-editor-${id}`;
   const savedContent = localStorage.getItem(key);
 
   if (savedContent) {
@@ -114,5 +131,5 @@ export const defineLines = (id?: string): HTMLOListElement => {
     localStorage.setItem(key, JSON.stringify(savedInfo));
   }, 2 * 1000);
 
-  return list;
+  return list; */
 };

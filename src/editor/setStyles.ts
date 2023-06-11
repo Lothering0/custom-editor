@@ -10,11 +10,17 @@ export const setStyles = (element: HTMLElement): void => {
   document.head.appendChild(styles);
   styles.innerHTML = `
     ${elementSelector} {
-      padding: 10px 15px 10px 45px;
+      position: relative;
       border-radius: 8px;
       background-color: #333;
       color: #bbb;
       outline: none;
+      overflow: hidden;
+    }
+
+    ${elementSelector},
+    ${elementSelector} > textarea {
+      padding: 10px 15px 10px 45px;
     }
 
     ${elementSelector} *::selection {
@@ -45,24 +51,30 @@ export const setStyles = (element: HTMLElement): void => {
     }
 
     ${elementSelector},
-    ${singleLineSelector} > input {
+    ${elementSelector} > textarea {
       font-family: monospace;
       font-size: 15px;
     }
 
-    ${singleLineSelector} > input {
+    ${elementSelector} > textarea {
       position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       width: 100%;
       height: 100%;
-      padding: 0;
+      margin: 0;
       background-color: transparent;
       border: none;
       color: transparent;
       caret-color: white;
       outline: none;
+      resize: none;
+      z-index: 2;
     }
 
-    ${singleLineSelector} > span {
+    ${singleLineSelector} {
       white-space: pre-wrap;
     }
 
