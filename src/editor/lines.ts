@@ -1,9 +1,9 @@
-import { BUILTIN_CONSTANTS, KEYWORDS, DECLARE_KEYWORDS, OPERATORS } from "./keywords";
+import { BUILTIN_CONSTANTS, KEYWORDS, DECLARE_KEYWORDS } from "./keywords";
 
 const formatContent = (content: string): string => {
-  const delimeters = /([(){}\[\];, ])/.toString().replace(/\//g, "");
+  const delimiters = /([(){}\[\];, ])/.toString().replace(/\//g, "");
   const surroundByDelimeters = (token: string): RegExp => {
-    return new RegExp(`(?:${delimeters}|^)(${token})(?:${delimeters}|$)`, "g");
+    return new RegExp(`(?:${delimiters}|^)(${token})(?:${delimiters}|$)`, "g");
   };
 
   // Replace strings
@@ -27,13 +27,11 @@ const formatContent = (content: string): string => {
   DECLARE_KEYWORDS.forEach((keyword) => {
     const regExp = surroundByDelimeters(keyword);
 
-    const identifier = new RegExp(`((?:${delimeters}|^)(?:${keyword})) (\\w+)`, "g");
+    const identifier = new RegExp(`((?:${delimiters}|^)(?:${keyword})) (\\w+)`, "g");
     content = content.replace(identifier, `$1 <span class="identifier">$3</span>`);
 
     content = content.replace(regExp, `$1<span class="keyword">${keyword}</span>$3`);
   });
-
-  OPERATORS.forEach((operator) => operator);
 
   // Replace numbers
   content = content.replace(

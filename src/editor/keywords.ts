@@ -15,8 +15,9 @@ export const KEYWORDS = [
   "with",
   "return",
   "throw",
+  "typeof",
+  "instanceof",
+  "new",
 ];
 
 export const DECLARE_KEYWORDS = ["var", "let", "const", "function", "class"];
-
-export const OPERATORS = ["+", "-", "*", "/", "%", "="];
