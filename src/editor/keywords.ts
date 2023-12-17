@@ -15,9 +15,14 @@ export const KEYWORDS = [
   "with",
   "return",
   "throw",
+  "export",
+  "default",
+  // Operators
   "typeof",
   "instanceof",
+  "void",
   "new",
+  "delete",
 ];
 
 export const DECLARE_KEYWORDS = ["var", "let", "const", "function", "class"];

@@ -97,5 +97,9 @@ export const setStyles = (element: HTMLElement): void => {
     ${elementSelector} .identifier {
       color: #f0c954;
     }
+
+    ${elementSelector} .comment {
+      color: #6e6e6e;
+    }
   `;
 };
